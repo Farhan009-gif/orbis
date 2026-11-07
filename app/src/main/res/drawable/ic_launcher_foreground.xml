@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Orbit ring around the Orbis sphere -->
+    <path
+        android:strokeColor="#0E7C6B"
+        android:strokeWidth="5"
+        android:fillColor="#00000000"
+        android:pathData="M54,54 m-27,0 a27,27 0 1,0 54,0 a27,27 0 1,0 -54,0" />
+    <!-- Planet on the orbit -->
+    <path
+        android:fillColor="#0E7C6B"
+        android:pathData="M81,54 m-6.5,0 a6.5,6.5 0 1,0 13,0 a6.5,6.5 0 1,0 -13,0" />
+    <!-- The sphere at the centre -->
+    <path
+        android:fillColor="#E8EFEC"
+        android:pathData="M54,54 m-12,0 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0" />
+</vector>

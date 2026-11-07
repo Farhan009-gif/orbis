@@ -44,6 +44,7 @@ android {
     signingConfigs {
         create("orbis") {
             storeFile = orbisKeystore
+            storeType = "PKCS12"
             storePassword = "orbis"
             keyAlias = "orbis"
             keyPassword = "orbis"

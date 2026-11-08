@@ -1,19 +1,27 @@
-import java.util.Base64
+import java.io.File
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
 }
 
-// The fixed signing key is kept base64-encoded in the repo
-// (signing/orbis.keystore.b64) and decoded to a real keystore
-// file here, before the signing config below uses it.
-val orbisKeystore = File(rootProject.projectDir, "build/orbis.keystore").apply {
-    parentFile.mkdirs()
-    writeBytes(
-        Base64.getDecoder().decode(
-            rootProject.file("signing/orbis.keystore.b64").readText().trim()
-        )
+// Signing material is NEVER stored in this repo. The workflow decodes
+// the ORBIS_KEYSTORE_B64 secret into a temp keystore outside the repo
+// tree and passes its path + passwords in through the environment.
+// No env present -> the build fails loudly below instead of signing
+// with anything else (a silent fallback is how an app loses its key).
+val orbisKeystorePath = System.getenv("ORBIS_KEYSTORE_PATH")
+val orbisStorePassword = System.getenv("ORBIS_STORE_PASSWORD")
+val orbisKeyAlias = System.getenv("ORBIS_KEY_ALIAS")
+val orbisKeyPassword = System.getenv("ORBIS_KEY_PASSWORD")
+if (orbisKeystorePath.isNullOrBlank() || !File(orbisKeystorePath).isFile ||
+    orbisStorePassword.isNullOrBlank() || orbisKeyAlias.isNullOrBlank() ||
+    orbisKeyPassword.isNullOrBlank()
+) {
+    throw GradleException(
+        "Orbis signing env missing: ORBIS_KEYSTORE_PATH / ORBIS_STORE_PASSWORD / " +
+            "ORBIS_KEY_ALIAS / ORBIS_KEY_PASSWORD must be set (from repo secrets in CI). " +
+            "Refusing to build unsigned or with any fallback key."
     )
 }
 
@@ -37,17 +45,16 @@ android {
     }
 
     // One fixed key for every build, so the app signature never changes
-    // and new APKs install over the old app as updates. The key lives in
-    // this private repo (signing/orbis.keystore.b64) by design; if Orbis
-    // is ever published, switch to a secret release key stored outside
-    // the repo first.
+    // and new APKs install over the old app as updates. The key itself
+    // lives only in GitHub Secrets (ORBIS_*) plus the owner's local
+    // record — never in this repository.
     signingConfigs {
         create("orbis") {
-            storeFile = orbisKeystore
+            storeFile = File(orbisKeystorePath)
             storeType = "PKCS12"
-            storePassword = "orbis"
-            keyAlias = "orbis"
-            keyPassword = "orbis"
+            storePassword = orbisStorePassword
+            keyAlias = orbisKeyAlias
+            keyPassword = orbisKeyPassword
         }
     }
 

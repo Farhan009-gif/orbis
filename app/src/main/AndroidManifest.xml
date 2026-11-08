@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- No permissions at all: Orbis is fully offline. The whole app
-         (index.html) is bundled in assets and loaded from there. -->
+    <!-- The whole app (index.html) is bundled in assets and loaded from
+         there. INTERNET is the one permission declared: it lets the
+         OrbisNet bridge (see MainActivity.kt) make native API calls for
+         the Assistant's user-configured endpoints — native HTTP is not
+         bound by the CORS rules that block WebView fetch() calls.
+         Without saved API settings the app still works fully offline. -->
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="false"

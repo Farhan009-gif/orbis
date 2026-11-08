@@ -1,17 +1,17 @@
 # Orbis
 
-A complete Class 9–10 study lab in a single web app — **70 interactive experiments and visual lessons**, all running in the browser with pure HTML, CSS and JavaScript. No build step, no dependencies.
+A complete Class 9–10 study lab in a single web app — **96 interactive experiments and visual lessons**, all running in the browser with pure HTML, CSS and JavaScript. No build step, no dependencies.
 
 ## Subjects
 
 | Subject | Activities |
 |---|---|
-| Physics | 21 |
-| Chemistry | 17 |
-| Biology | 13 |
-| Mathematics | 10 |
-| Social Science | 5 |
-| Computer Science | 4 |
+| Physics | 29 |
+| Chemistry | 25 |
+| Biology | 16 |
+| Mathematics | 13 |
+| Social Science | 7 |
+| Computer Science | 6 |
 
 ## Every activity includes
 

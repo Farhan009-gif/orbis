@@ -22,7 +22,26 @@ jobs:
         with:
           gradle-version: "8.10.2"
 
+      # The signing key lives only in repo secrets. Decode it to a temp
+      # file OUTSIDE the repo tree; gradle reads the path + passwords
+      # from the environment and fails loudly if they are missing.
+      - name: Decode signing keystore
+        env:
+          ORBIS_KEYSTORE_B64: ${{ secrets.ORBIS_KEYSTORE_B64 }}
+        run: |
+          if [ -z "$ORBIS_KEYSTORE_B64" ]; then
+            echo "::error::ORBIS_KEYSTORE_B64 secret is not set"
+            exit 1
+          fi
+          echo "$ORBIS_KEYSTORE_B64" | base64 --decode > "$RUNNER_TEMP/orbis.keystore"
+          test -s "$RUNNER_TEMP/orbis.keystore"
+
       - name: Build debug APK
+        env:
+          ORBIS_KEYSTORE_PATH: ${{ runner.temp }}/orbis.keystore
+          ORBIS_STORE_PASSWORD: ${{ secrets.ORBIS_STORE_PASSWORD }}
+          ORBIS_KEY_PASSWORD: ${{ secrets.ORBIS_KEY_PASSWORD }}
+          ORBIS_KEY_ALIAS: ${{ secrets.ORBIS_KEY_ALIAS }}
         run: gradle assembleDebug --no-daemon
 
       - name: Upload APK

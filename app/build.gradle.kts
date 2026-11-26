@@ -37,7 +37,7 @@ android {
         // workflow run number, so each new APK installs as an update.
         // Local builds keep version code 1.
         versionCode = (System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull()?.plus(1000)) ?: 1
-        versionName = "1.0"
+        versionName = "1.2"
 
         vectorDrawables {
             useSupportLibrary = true
